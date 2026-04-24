@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PM Portfolio Coach</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{--bg:#0f0f0f;--card:#181818;--border:#2a2a2a;--accent:#c8956c;--text:#f0ede8;--muted:#777;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+
+nav{display:flex;align-items:center;justify-content:space-between;padding:1.4rem 3rem;border-bottom:1px solid var(--border);}
+.nav-logo{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;}
+.nav-badge{font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);border:1px solid rgba(200,149,108,.35);padding:.25rem .8rem;border-radius:50px;}
+
+.hero{max-width:860px;margin:0 auto;padding:5rem 2rem 2rem;text-align:center;}
+.hero-tag{font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin-bottom:1.2rem;display:block;}
+.hero-title{font-family:'Playfair Display',serif;font-size:clamp(2.4rem,6vw,4.2rem);font-weight:900;line-height:1.05;margin-bottom:1.2rem;}
+.hero-title em{color:var(--accent);font-style:italic;}
+.hero-sub{font-size:.95rem;color:var(--muted);line-height:1.9;max-width:480px;margin:0 auto 3rem;}
+
+/* Main card */
+.main-card{max-width:620px;margin:0 auto;padding:0 2rem 2rem;}
+.card-box{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:2.5rem;}
+.card-label{font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:1.2rem;text-align:center;}
+
+.tgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:.7rem;margin-bottom:1.8rem;}
+.tcard{border:2px solid var(--border);border-radius:12px;overflow:hidden;cursor:pointer;transition:.2s;}
+.tcard:hover{border-color:#555;}
+.tcard.sel{border-color:var(--accent);box-shadow:0 0 0 3px rgba(200,149,108,.15);}
+.tprev{display:flex;height:34px;}
+.tprev span{flex:1;}
+.tname{font-size:.7rem;text-align:center;padding:.4rem;color:#aaa;font-weight:500;background:var(--card);}
+.tcard.sel .tname{color:var(--accent);}
+
+.theme-preview{border-radius:12px;overflow:hidden;margin-bottom:1.8rem;border:1px solid var(--border);}
+.preview-slide{padding:1.4rem 1.6rem;}
+.preview-tag{font-size:.56rem;letter-spacing:.18em;text-transform:uppercase;opacity:.5;margin-bottom:.35rem;}
+.preview-name{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:900;margin-bottom:.25rem;}
+.preview-role{font-size:.7rem;opacity:.55;margin-bottom:.7rem;}
+.preview-badges{display:flex;gap:.5rem;flex-wrap:wrap;}
+.pbadge{padding:.25rem .75rem;border-radius:50px;font-size:.66rem;font-weight:500;}
+
+.btn-launch{display:block;width:100%;padding:1rem;background:var(--accent);color:#fff;border:none;border-radius:12px;font-size:1rem;font-family:'Inter',sans-serif;font-weight:600;cursor:pointer;transition:.2s;text-align:center;}
+.btn-launch:hover{opacity:.88;}
+
+/* After click instructions */
+.after-steps{margin-top:1.5rem;border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+.after-title{font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);padding:.8rem 1.2rem;border-bottom:1px solid var(--border);background:rgba(255,255,255,.02);}
+.after-list{list-style:none;padding:.4rem 0;}
+.after-list li{display:flex;align-items:flex-start;gap:.8rem;padding:.65rem 1.2rem;font-size:.82rem;color:#bbb;line-height:1.5;border-bottom:1px solid rgba(255,255,255,.04);}
+.after-list li:last-child{border-bottom:none;}
+.after-num{width:20px;height:20px;border-radius:50%;background:var(--accent);color:#fff;font-size:.65rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:.1rem;}
+
+/* How it works section */
+.how-section{max-width:860px;margin:0 auto;padding:3rem 2rem 5rem;}
+.how-title{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;text-align:center;margin-bottom:2rem;}
+.how-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;}
+.how-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.5rem 1.3rem;}
+.how-num{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:900;color:var(--accent);margin-bottom:.5rem;line-height:1;}
+.how-t{font-size:.85rem;font-weight:600;margin-bottom:.35rem;}
+.how-d{font-size:.77rem;color:var(--muted);line-height:1.7;}
+
+footer{padding:1.8rem 3rem;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border);}
+.footer-text{font-size:.75rem;color:var(--muted);}
+.footer-link{font-size:.75rem;color:var(--muted);text-decoration:none;}
+.footer-link:hover{color:var(--text);}
+
+@media(max-width:600px){
+  nav{padding:1rem 1.5rem;}
+  .main-card{padding:0 1rem 2rem;}
+  footer{flex-direction:column;gap:.6rem;text-align:center;padding:1.5rem;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">PM Portfolio Coach</div>
+  <div class="nav-badge">Free · Powered by Claude</div>
+</nav>
+
+<section class="hero">
+  <span class="hero-tag">For Product Managers</span>
+  <h1 class="hero-title">履歷不等於<br /><em>作品集</em></h1>
+  <p class="hero-sub">選好風格，讓 AI 分析你的履歷、問你問題，幫你建出一份有故事的 PM 作品集。完全免費。</p>
+</section>
+
+<div class="main-card">
+  <div class="card-box">
+    <div class="card-label">① 選擇你的作品集風格</div>
+    <div class="tgrid" id="theme-grid"></div>
+    <div class="theme-preview" id="theme-preview"></div>
+
+    <button class="btn-launch" id="btn-launch">② 前往 Claude.ai 開始建立 →</button>
+
+    <div class="after-steps">
+      <div class="after-title">跳轉後，請依序完成以下步驟</div>
+      <ul class="after-list">
+        <li>
+          <span class="after-num">1</span>
+          <span>登入或註冊免費的 <strong style="color:#f0ede8">Claude.ai</strong> 帳號</span>
+        </li>
+        <li>
+          <span class="after-num">2</span>
+          <span>畫面下方有一段文字已自動帶入，直接按 <strong style="color:#f0ede8">送出</strong></span>
+        </li>
+        <li>
+          <span class="after-num">3</span>
+          <span>Claude 回應後，點左下角 <strong style="color:#f0ede8">＋ 按鈕</strong> 上傳你的 <strong style="color:#f0ede8">PDF 履歷</strong></span>
+        </li>
+        <li>
+          <span class="after-num">4</span>
+          <span>AI 會自動分析履歷，並一步一步引導你完成作品集 🎯</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<section class="how-section">
+  <h2 class="how-title">AI 會幫你做什麼？</h2>
+  <div class="how-grid">
+    <div class="how-card">
+      <div class="how-num">01</div>
+      <div class="how-t">分析履歷強項</div>
+      <div class="how-d">找出 2–3 個最有代表性的專案，告訴你哪些可以發展成完整案例。</div>
+    </div>
+    <div class="how-card">
+      <div class="how-num">02</div>
+      <div class="how-t">指出作品集缺口</div>
+      <div class="how-d">分析你的作品集缺少什麼，建議可以補充的方向。</div>
+    </div>
+    <div class="how-card">
+      <div class="how-num">03</div>
+      <div class="how-t">一問一答深挖故事</div>
+      <div class="how-d">每次只問一個問題，幫你把每個專案說成「問題→做法→成果」的完整故事。</div>
+    </div>
+    <div class="how-card">
+      <div class="how-num">04</div>
+      <div class="how-t">整理作品集大綱</div>
+      <div class="how-d">所有專案完成後，輸出完整大綱，可直接轉成 PPT 或個人網站。</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-text">PM Portfolio Coach · Powered by Claude AI</div>
+  <a class="footer-link" href="https://github.com/valerieliao0102/Pm-Portfolio-coach" target="_blank">GitHub →</a>
+</footer>
+
+<script>
+const THEMES = [
+  {id:"inkgold",   name:"墨黑金",bg:"#181818",accent:"#E9B94E",text:"#FFFFFF",card:"#242424",tagText:"#181818",preview:["#181818","#242424","#E9B94E"]},
+  {id:"deepblue",  name:"深海藍",bg:"#0D1F3C",accent:"#4A9EFF",text:"#FFFFFF",card:"#162a50",tagText:"#0D1F3C",preview:["#0D1F3C","#162a50","#4A9EFF"]},
+  {id:"fogsilver", name:"霧灰銀",bg:"#2A2D35",accent:"#A0AAB8",text:"#FFFFFF",card:"#353840",tagText:"#2A2D35",preview:["#2A2D35","#353840","#A0AAB8"]},
+  {id:"creamorange",name:"奶油橘",bg:"#FFFAF4",accent:"#D4622A",text:"#1a0e08",card:"#FFFFFF",tagText:"#FFFFFF",preview:["#FFFAF4","#FFFFFF","#D4622A"]},
+  {id:"mint",      name:"薄荷綠",bg:"#F2FBF6",accent:"#1E8A5E",text:"#0d2e20",card:"#FFFFFF",tagText:"#FFFFFF",preview:["#F2FBF6","#FFFFFF","#1E8A5E"]},
+  {id:"morandi",   name:"莫蘭迪",bg:"#F7F2EE",accent:"#B07A6E",text:"#2a1a16",card:"#FFFFFF",tagText:"#FFFFFF",preview:["#F7F2EE","#FFFFFF","#B07A6E"]},
+];
+
+let selected = THEMES[3];
+
+const grid = document.getElementById("theme-grid");
+THEMES.forEach(th => {
+  const c = document.createElement("div");
+  c.className = "tcard" + (th.id === selected.id ? " sel" : "");
+  c.innerHTML = `<div class="tprev">${th.preview.map(x=>`<span style="background:${x}"></span>`).join("")}</div><div class="tname">${th.name}</div>`;
+  c.onclick = () => {
+    selected = th;
+    document.querySelectorAll(".tcard").forEach(x => x.classList.remove("sel"));
+    c.classList.add("sel");
+    renderPreview();
+  };
+  grid.appendChild(c);
+});
+
+function renderPreview() {
+  const t = selected;
+  document.getElementById("theme-preview").innerHTML = `
+    <div class="preview-slide" style="background:${t.bg};color:${t.text};">
+      <div class="preview-tag" style="color:${t.accent}">Portfolio · Product Manager</div>
+      <div class="preview-name">你的名字</div>
+      <div class="preview-role" style="color:${t.accent}">Senior PM · 5 年經驗</div>
+      <div class="preview-badges">
+        <span class="pbadge" style="background:${t.accent};color:${t.tagText}">產品策略</span>
+        <span class="pbadge" style="border:1px solid ${t.accent};color:${t.text}">數據驅動</span>
+        <span class="pbadge" style="border:1px solid ${t.accent};color:${t.text}">跨部門協作</span>
+      </div>
+    </div>`;
+}
+
+renderPreview();
+
+document.getElementById("btn-launch").onclick = () => {
+  const t = selected;
+  const msg = `我想建立一份 PM 作品集，配色風格選「${t.name}」（背景色 ${t.bg}，強調色 ${t.accent}）。我等一下會上傳我的 PDF 履歷，請幫我分析後引導我一步一步完成整份作品集，包含：分析現有專案、指出缺口、逐一深挖每個專案故事（問題→做法→成果），最後整理成完整大綱。`;
+  const url = `https://claude.ai/new?q=${encodeURIComponent(msg)}`;
+  window.open(url, "_blank");
+};
+</script>
+</body>
+</html>
